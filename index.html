@@ -130,54 +130,62 @@
         <form @submit.prevent="generateLua">
             <!-- Item Form -->
             <div v-if="selectedType === 'item'">
-                <div class="mb-3" v-for="(field, index) in itemFields" :key="index">
-                    <label :for="field.id" class="form-label">{{ field.label }}</label>
-                    <input v-if="field.type !== 'checkbox'" :type="field.type" class="form-control" v-model="field.value" :placeholder="field.placeholder">
-                    <input v-else :type="field.type" class="form-check-input" v-model="field.value">
+                <div v-for="(item, index) in items" :key="index" class="mb-3 border-bottom pb-3">
+                    <h4>Item {{ index + 1 }}</h4>
+                    <div class="mb-3" v-for="field in itemFields" :key="field.id">
+                        <label :for="field.id" class="form-label">{{ field.label }}</label>
+                        <input v-if="field.type !== 'checkbox'" :type="field.type" class="form-control" v-model="item[field.id]" :placeholder="field.placeholder">
+                        <input v-else :type="field.type" class="form-check-input" v-model="item[field.id]">
+                    </div>
                 </div>
+                <button type="button" class="btn btn-secondary" @click="addItem">Add Item</button>
             </div>
             <!-- Job Form -->
             <div v-if="selectedType === 'job'">
-                <div class="mb-3">
-                    <label for="jobName" class="form-label">Job Name</label>
-                    <input type="text" id="jobName" class="form-control" v-model="job.name" placeholder="Enter job code name">
-                </div>
-                <div class="mb-3">
-                    <label for="jobLabel" class="form-label">Job Label</label>
-                    <input type="text" id="jobLabel" class="form-control" v-model="job.label" placeholder="Enter display name">
-                </div>
-                <div class="mb-3">
-                    <label for="jobType" class="form-label">Job Type</label>
-                    <input type="text" id="jobType" class="form-control" v-model="job.type" placeholder="Enter job type">
-                </div>
-                <div class="mb-3">
-                    <label for="defaultDuty" class="form-label">Default Duty</label>
-                    <select id="defaultDuty" class="form-select" v-model="job.defaultDuty">
-                        <option value="true">True</option>
-                        <option value="false">False</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="offDutyPay" class="form-label">Off Duty Pay</label>
-                    <select id="offDutyPay" class="form-select" v-model="job.offDutyPay">
-                        <option value="true">True</option>
-                        <option value="false">False</option>
-                    </select>
-                </div>
-                <div v-for="(grade, index) in job.grades" :key="index" class="mb-3">
-                    <h5>Grade {{ index + 1 }}</h5>
-                    <label :for="'gradeName' + index" class="form-label">Name</label>
-                    <input :id="'gradeName' + index" type="text" class="form-control" v-model="grade.name" placeholder="Enter grade name">
-                    <label :for="'gradePayment' + index" class="form-label">Payment</label>
-                    <input :id="'gradePayment' + index" type="number" class="form-control" v-model="grade.payment" placeholder="Enter payment amount">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" :id="'gradeIsBoss' + index" v-model="grade.isboss">
-                        <label class="form-check-label" :for="'gradeIsBoss' + index">
-                            Is Boss
-                        </label>
+                <div v-for="(job, index) in jobs" :key="index" class="mb-3 border-bottom pb-3">
+                    <h4>Job {{ index + 1 }}</h4>
+                    <div class="mb-3">
+                        <label for="jobName" class="form-label">Job Name</label>
+                        <input type="text" id="jobName" class="form-control" v-model="job.name" placeholder="Enter job code name">
                     </div>
+                    <div class="mb-3">
+                        <label for="jobLabel" class="form-label">Job Label</label>
+                        <input type="text" id="jobLabel" class="form-control" v-model="job.label" placeholder="Enter display name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="jobType" class="form-label">Job Type</label>
+                        <input type="text" id="jobType" class="form-control" v-model="job.type" placeholder="Enter job type">
+                    </div>
+                    <div class="mb-3">
+                        <label for="defaultDuty" class="form-label">Default Duty</label>
+                        <select id="defaultDuty" class="form-select" v-model="job.defaultDuty">
+                            <option value="true">True</option>
+                            <option value="false">False</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="offDutyPay" class="form-label">Off Duty Pay</label>
+                        <select id="offDutyPay" class="form-select" v-model="job.offDutyPay">
+                            <option value="true">True</option>
+                            <option value="false">False</option>
+                        </select>
+                    </div>
+                    <div v-for="(grade, gradeIndex) in job.grades" :key="gradeIndex" class="mb-3">
+                        <h5>Grade {{ gradeIndex + 1 }}</h5>
+                        <label :for="'gradeName' + gradeIndex" class="form-label">Name</label>
+                        <input :id="'gradeName' + gradeIndex" type="text" class="form-control" v-model="grade.name" placeholder="Enter grade name">
+                        <label :for="'gradePayment' + gradeIndex" class="form-label">Payment</label>
+                        <input :id="'gradePayment' + gradeIndex" type="number" class="form-control" v-model="grade.payment" placeholder="Enter payment amount">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" :id="'gradeIsBoss' + gradeIndex" v-model="grade.isboss">
+                            <label class="form-check-label" :for="'gradeIsBoss' + gradeIndex">
+                                Is Boss
+                            </label>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-secondary" @click="addGrade(index)">Add Grade</button>
                 </div>
-                <button type="button" class="btn btn-secondary" @click="addGrade">Add Grade</button>
+                <button type="button" class="btn btn-secondary" @click="addJob">Add Job</button>
             </div>
             <!-- Vehicle Form -->
             <div v-if="selectedType === 'vehicle'">
@@ -202,45 +210,53 @@
             </div>
             <!-- Weapon Form -->
             <div v-if="selectedType === 'weapon'">
-                <div class="mb-3">
-                    <label for="weaponName" class="form-label">Weapon Name (e.g., weapon_unarmed)</label>
-                    <input type="text" id="weaponName" class="form-control" v-model="weapon.name" placeholder="Enter weapon code name">
+                <div v-for="(weapon, index) in weapons" :key="index" class="mb-3 border-bottom pb-3">
+                    <h4>Weapon {{ index + 1 }}</h4>
+                    <div class="mb-3">
+                        <label for="weaponName" class="form-label">Weapon Name (e.g., weapon_unarmed)</label>
+                        <input type="text" id="weaponName" class="form-control" v-model="weapon.name" placeholder="Enter weapon code name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="weaponLabel" class="form-label">Weapon Label (e.g., Fists)</label>
+                        <input type="text" id="weaponLabel" class="form-control" v-model="weapon.label" placeholder="Enter display name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="weaponType" class="form-label">Weapon Type (e.g., Melee)</label>
+                        <input type="text" id="weaponType" class="form-control" v-model="weapon.weapontype" placeholder="Enter type of weapon">
+                    </div>
+                    <div class="mb-3">
+                        <label for="ammoType" class="form-label">Ammo Type</label>
+                        <input type="text" id="ammoType" class="form-control" v-model="weapon.ammotype" placeholder="Enter ammo type (if applicable)">
+                    </div>
+                    <div class="mb-3">
+                        <label for="damageReason" class="form-label">Damage Reason (e.g., Knifed / Stabbed)</label>
+                        <input type="text" id="damageReason" class="form-control" v-model="weapon.damagereason" placeholder="Enter damage description">
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="weaponLabel" class="form-label">Weapon Label (e.g., Fists)</label>
-                    <input type="text" id="weaponLabel" class="form-control" v-model="weapon.label" placeholder="Enter display name">
-                </div>
-                <div class="mb-3">
-                    <label for="weaponType" class="form-label">Weapon Type (e.g., Melee)</label>
-                    <input type="text" id="weaponType" class="form-control" v-model="weapon.weapontype" placeholder="Enter type of weapon">
-                </div>
-                <div class="mb-3">
-                    <label for="ammoType" class="form-label">Ammo Type</label>
-                    <input type="text" id="ammoType" class="form-control" v-model="weapon.ammotype" placeholder="Enter ammo type (if applicable)">
-                </div>
-                <div class="mb-3">
-                    <label for="damageReason" class="form-label">Damage Reason (e.g., Knifed / Stabbed)</label>
-                    <input type="text" id="damageReason" class="form-control" v-model="weapon.damagereason" placeholder="Enter damage description">
-                </div>
+                <button type="button" class="btn btn-secondary" @click="addWeapon">Add Weapon</button>
             </div>
             <!-- Gang Form -->
             <div v-if="selectedType === 'gang'">
-                <div class="mb-3">
-                    <label for="gangName" class="form-label">Gang Name</label>
-                    <input type="text" id="gangName" class="form-control" v-model="gang.name" placeholder="Enter gang code name">
+                <div v-for="(gang, index) in gangs" :key="index" class="mb-3 border-bottom pb-3">
+                    <h4>Gang {{ index + 1 }}</h4>
+                    <div class="mb-3">
+                        <label for="gangName" class="form-label">Gang Name</label>
+                        <input type="text" id="gangName" class="form-control" v-model="gang.name" placeholder="Enter gang code name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="gangLabel" class="form-label">Gang Label</label>
+                        <input type="text" id="gangLabel" class="form-control" v-model="gang.label" placeholder="Enter display name">
+                    </div>
+                    <div v-for="(rank, rankIndex) in gang.ranks" :key="rankIndex" class="mb-3">
+                        <h5>Rank {{ rankIndex + 1 }}</h5>
+                        <label :for="'rankName' + rankIndex" class="form-label">Name</label>
+                        <input :id="'rankName' + rankIndex" type="text" class="form-control" v-model="rank.name" placeholder="Enter rank name">
+                        <label :for="'rankPermission' + rankIndex" class="form-label">Permission</label>
+                        <input :id="'rankPermission' + rankIndex" type="text" class="form-control" v-model="rank.permission" placeholder="Enter rank permission">
+                    </div>
+                    <button type="button" class="btn btn-secondary" @click="addRank(index)">Add Rank</button>
                 </div>
-                <div class="mb-3">
-                    <label for="gangLabel" class="form-label">Gang Label</label>
-                    <input type="text" id="gangLabel" class="form-control" v-model="gang.label" placeholder="Enter display name">
-                </div>
-                <div v-for="(rank, index) in gang.ranks" :key="index" class="mb-3">
-                    <h5>Rank {{ index + 1 }}</h5>
-                    <label :for="'rankName' + index" class="form-label">Name</label>
-                    <input :id="'rankName' + index" type="text" class="form-control" v-model="rank.name" placeholder="Enter rank name">
-                    <label :for="'rankPermission' + index" class="form-label">Permission</label>
-                    <input :id="'rankPermission' + index" type="text" class="form-control" v-model="rank.permission" placeholder="Enter rank permission">
-                </div>
-                <button type="button" class="btn btn-secondary" @click="addRank">Add Rank</button>
+                <button type="button" class="btn btn-secondary" @click="addGang">Add Gang</button>
             </div>
             <button type="submit" class="btn btn-primary mt-3">Generate Lua</button>
         </form>
@@ -256,61 +272,53 @@
             data: {
                 selectedType: 'item',
                 itemFields: [
-                    { id: 'name', label: 'Name', type: 'text', value: '', placeholder: 'Enter item name' },
-                    { id: 'label', label: 'Label', type: 'text', value: '', placeholder: 'Enter item label' },
-                    { id: 'weight', label: 'Weight', type: 'number', value: '', placeholder: 'Enter item weight' },
-                    { id: 'stackable', label: 'Stackable', type: 'checkbox', value: false, placeholder: '' },
-                    { id: 'description', label: 'Description', type: 'text', value: '', placeholder: 'Enter item description' },
-                    { id: 'close', label: 'Close', type: 'checkbox', value: false, placeholder: '' },
-                    { id: 'usable', label: 'Usable', type: 'checkbox', value: false, placeholder: '' },
-                    { id: 'rare', label: 'Rare', type: 'checkbox', value: false, placeholder: '' },
-                    { id: 'illegal', label: 'Illegal', type: 'checkbox', value: false, placeholder: '' },
-                    { id: 'canRemove', label: 'Can Remove', type: 'checkbox', value: false, placeholder: '' },
+                    { id: 'name', label: 'Name', type: 'text', placeholder: 'Enter item name' },
+                    { id: 'label', label: 'Label', type: 'text', placeholder: 'Enter item label' },
+                    { id: 'weight', label: 'Weight', type: 'number', placeholder: 'Enter item weight' },
+                    { id: 'stackable', label: 'Stackable', type: 'checkbox', placeholder: '' },
+                    { id: 'description', label: 'Description', type: 'text', placeholder: 'Enter item description' },
+                    { id: 'close', label: 'Close', type: 'checkbox', placeholder: '' },
+                    { id: 'usable', label: 'Usable', type: 'checkbox', placeholder: '' },
+                    { id: 'rare', label: 'Rare', type: 'checkbox', placeholder: '' },
+                    { id: 'illegal', label: 'Illegal', type: 'checkbox', placeholder: '' },
+                    { id: 'canRemove', label: 'Can Remove', type: 'checkbox', placeholder: '' },
                 ],
-                job: {
-                    name: '',
-                    label: '',
-                    type: '',
-                    defaultDuty: 'true',
-                    offDutyPay: 'true',
-                    grades: [{ name: '', payment: 0, isboss: false }]
-                },
-                vehicles: [
-                    { model: '', name: '', brand: '', price: 0, category: '', type: '', shop: '' }
-                ],
-                weapon: {
-                    name: '',
-                    label: '',
-                    weapontype: '',
-                    ammotype: '',
-                    damagereason: ''
-                },
-                gang: {
-                    name: '',
-                    label: '',
-                    ranks: [{ name: '', permission: '' }]
-                },
+                items: [],
+                jobs: [],
+                vehicles: [],
+                weapons: [],
+                gangs: [],
                 luaOutput: ''
             },
             methods: {
                 loadDefaultFields() {
-
+                    this.items = [];
+                    this.jobs = [];
+                    this.vehicles = [];
+                    this.weapons = [];
+                    this.gangs = [];
                 },
                 generateLua() {
                     let lua = '';
                     if (this.selectedType === 'item') {
-                        lua = `QBShared.Items = QBShared.Items or {}\n\nQBShared.Items['${this.itemFields[0].value}'] = {\n`;
-                        this.itemFields.forEach(field => {
-                            lua += `    ${field.id} = ${JSON.stringify(field.value)},\n`;
+                        lua = `QBShared.Items = QBShared.Items or {}\n\n`;
+                        this.items.forEach(item => {
+                            lua += `QBShared.Items['${item.name}'] = {\n`;
+                            this.itemFields.forEach(field => {
+                                lua += `    ${field.id} = ${JSON.stringify(item[field.id])},\n`;
+                            });
+                            lua += `}\n\n`;
                         });
-                        lua += `}`;
                     } else if (this.selectedType === 'job') {
-                        lua = `QBShared.Jobs = QBShared.Jobs or {}\n\nQBShared.Jobs['${this.job.name}'] = {\n`;
-                        lua += `    label = '${this.job.label}',\n    type = '${this.job.type}',\n    defaultDuty = ${this.job.defaultDuty},\n    offDutyPay = ${this.job.offDutyPay},\n    grades = {\n`;
-                        this.job.grades.forEach((grade, index) => {
-                            lua += `        ['${index}'] = { name = '${grade.name}', payment = ${grade.payment}${grade.isboss ? ', isboss = true' : ''} },\n`;
+                        lua = `QBShared.Jobs = QBShared.Jobs or {}\n\n`;
+                        this.jobs.forEach(job => {
+                            lua += `QBShared.Jobs['${job.name}'] = {\n`;
+                            lua += `    label = '${job.label}',\n    type = '${job.type}',\n    defaultDuty = ${job.defaultDuty},\n    offDutyPay = ${job.offDutyPay},\n    grades = {\n`;
+                            job.grades.forEach((grade, index) => {
+                                lua += `        ['${index}'] = { name = '${grade.name}', payment = ${grade.payment}${grade.isboss ? ', isboss = true' : ''} },\n`;
+                            });
+                            lua += `    }\n}\n\n`;
                         });
-                        lua += `    }\n}`;
                     } else if (this.selectedType === 'vehicle') {
                         lua = `QBShared.Vehicles = QBShared.Vehicles or {}\n\nlocal Vehicles = {\n`;
                         this.vehicles.forEach(vehicle => {
@@ -318,31 +326,62 @@
                         });
                         lua += `}\n\nfor i = 1, #Vehicles do\n    QBShared.Vehicles[Vehicles[i].model] = Vehicles[i]\nend`;
                     } else if (this.selectedType === 'weapon') {
-                        lua = `QBShared = QBShared or {}\nQBShared.Weapons = QBShared.Weapons or {}\n\nQBShared.Weapons[\`${this.weapon.name}\`] = {\n`;
-                        lua += `    name = '${this.weapon.name}',\n`;
-                        lua += `    label = '${this.weapon.label}',\n`;
-                        lua += `    weapontype = '${this.weapon.weapontype}',\n`;
-                        lua += `    ammotype = ${this.weapon.ammotype ? `'${this.weapon.ammotype}'` : 'nil'},\n`;
-                        lua += `    damagereason = '${this.weapon.damagereason}'\n`;
-                        lua += `}`;
-                    } else if (this.selectedType === 'gang') {
-                        lua = `QBShared.Gangs = QBShared.Gangs or {}\n\nQBShared.Gangs['${this.gang.name}'] = {\n`;
-                        lua += `    label = '${this.gang.label}',\n    grades = {\n`;
-                        this.gang.ranks.forEach((rank, index) => {
-                            lua += `        ['${index}'] = { name = '${rank.name}', permission = '${rank.permission}' },\n`;
+                        lua = `QBShared = QBShared or {}\nQBShared.Weapons = QBShared.Weapons or {}\n\n`;
+                        this.weapons.forEach(weapon => {
+                            lua += `QBShared.Weapons[\`${weapon.name}\`] = {\n`;
+                            lua += `    name = '${weapon.name}',\n`;
+                            lua += `    label = '${weapon.label}',\n`;
+                            lua += `    weapontype = '${weapon.weapontype}',\n`;
+                            lua += `    ammotype = ${weapon.ammotype ? `'${weapon.ammotype}'` : 'nil'},\n`;
+                            lua += `    damagereason = '${weapon.damagereason}'\n`;
+                            lua += `}\n\n`;
                         });
-                        lua += `    }\n}`;
+                    } else if (this.selectedType === 'gang') {
+                        lua = `QBShared.Gangs = QBShared.Gangs or {}\n\n`;
+                        this.gangs.forEach(gang => {
+                            lua += `QBShared.Gangs['${gang.name}'] = {\n`;
+                            lua += `    label = '${gang.label}',\n    grades = {\n`;
+                            gang.ranks.forEach((rank, index) => {
+                                lua += `        ['${index}'] = { name = '${rank.name}', permission = '${rank.permission}' },\n`;
+                            });
+                            lua += `    }\n}\n\n`;
+                        });
                     }
                     this.luaOutput = lua;
                 },
-                addGrade() {
-                    this.job.grades.push({ name: '', payment: 0, isboss: false });
+                addItem() {
+                    const newItem = {};
+                    this.itemFields.forEach(field => newItem[field.id] = field.type === 'checkbox' ? false : '');
+                    this.items.push(newItem);
+                },
+                addJob() {
+                    this.jobs.push({
+                        name: '',
+                        label: '',
+                        type: '',
+                        defaultDuty: 'true',
+                        offDutyPay: 'true',
+                        grades: [{ name: '', payment: 0, isboss: false }]
+                    });
                 },
                 addVehicle() {
                     this.vehicles.push({ model: '', name: '', brand: '', price: 0, category: '', type: '', shop: '' });
                 },
-                addRank() {
-                    this.gang.ranks.push({ name: '', permission: '' });
+                addWeapon() {
+                    this.weapons.push({ name: '', label: '', weapontype: '', ammotype: '', damagereason: '' });
+                },
+                addGang() {
+                    this.gangs.push({
+                        name: '',
+                        label: '',
+                        ranks: [{ name: '', permission: '' }]
+                    });
+                },
+                addGrade(index) {
+                    this.jobs[index].grades.push({ name: '', payment: 0, isboss: false });
+                },
+                addRank(index) {
+                    this.gangs[index].ranks.push({ name: '', permission: '' });
                 },
                 handleFileUpload(event) {
                     const file = event.target.files[0];
@@ -361,33 +400,40 @@
                         if (matches) {
                             matches.forEach(match => {
                                 const [_, key, values] = match.match(/(\w+)\s*=\s*{([^}]*)}/);
+                                const item = {};
                                 this.itemFields.forEach(field => {
                                     const valueMatch = values.match(new RegExp(`${field.id}\\s*=\\s*([^,]+)`));
-                                    if (valueMatch) {
-                                        field.value = valueMatch[1].trim().replace(/^["']|["']$/g, '');
-                                    }
+                                    item[field.id] = valueMatch ? valueMatch[1].trim().replace(/^["']|["']$/g, '') : (field.type === 'checkbox' ? false : '');
                                 });
+                                this.items.push(item);
                             });
                         }
                     } else if (this.selectedType === 'job') {
-                        const jobMatch = content.match(/(\w+)\s*=\s*{\s*label\s*=\s*'([^']*)',\s*type\s*=\s*'([^']*)',\s*defaultDuty\s*=\s*(\w+),\s*offDutyPay\s*=\s*(\w+),\s*grades\s*=\s*{([^}]*)}/);
-                        if (jobMatch) {
-                            this.job.name = jobMatch[1];
-                            this.job.label = jobMatch[2];
-                            this.job.type = jobMatch[3];
-                            this.job.defaultDuty = jobMatch[4];
-                            this.job.offDutyPay = jobMatch[5];
-                            const grades = jobMatch[6].match(/(\d+)\s*=\s*{([^}]*)}/g);
-                            this.job.grades = grades.map(grade => {
-                                const [_, gradeId, gradeValues] = grade.match(/(\d+)\s*=\s*{([^}]*)}/);
-                                const nameMatch = gradeValues.match(/name\s*=\s*'([^']*)'/);
-                                const paymentMatch = gradeValues.match(/payment\s*=\s*(\d+)/);
-                                const isbossMatch = gradeValues.match(/isboss\s*=\s*(\w+)/);
-                                return {
-                                    name: nameMatch ? nameMatch[1] : '',
-                                    payment: paymentMatch ? parseInt(paymentMatch[1], 10) : 0,
-                                    isboss: isbossMatch ? isbossMatch[1] === 'true' : false
+                        const jobMatches = content.match(/(\w+)\s*=\s*{\s*label\s*=\s*'([^']*)',\s*type\s*=\s*'([^']*)',\s*defaultDuty\s*=\s*(\w+),\s*offDutyPay\s*=\s*(\w+),\s*grades\s*=\s*{([^}]*)}/g);
+                        if (jobMatches) {
+                            jobMatches.forEach(jobMatch => {
+                                const [_, jobName, jobLabel, jobType, defaultDuty, offDutyPay, gradesStr] = jobMatch.match(/(\w+)\s*=\s*{\s*label\s*=\s*'([^']*)',\s*type\s*=\s*'([^']*)',\s*defaultDuty\s*=\s*(\w+),\s*offDutyPay\s*=\s*(\w+),\s*grades\s*=\s*{([^}]*)}/);
+                                const job = {
+                                    name: jobName,
+                                    label: jobLabel,
+                                    type: jobType,
+                                    defaultDuty: defaultDuty,
+                                    offDutyPay: offDutyPay,
+                                    grades: []
                                 };
+                                const grades = gradesStr.match(/(\d+)\s*=\s*{([^}]*)}/g);
+                                grades.forEach(grade => {
+                                    const [__, gradeId, gradeValues] = grade.match(/(\d+)\s*=\s*{([^}]*)}/);
+                                    const nameMatch = gradeValues.match(/name\s*=\s*'([^']*)'/);
+                                    const paymentMatch = gradeValues.match(/payment\s*=\s*(\d+)/);
+                                    const isbossMatch = gradeValues.match(/isboss\s*=\s*(\w+)/);
+                                    job.grades.push({
+                                        name: nameMatch ? nameMatch[1] : '',
+                                        payment: paymentMatch ? parseInt(paymentMatch[1], 10) : 0,
+                                        isboss: isbossMatch ? isbossMatch[1] === 'true' : false
+                                    });
+                                });
+                                this.jobs.push(job);
                             });
                         }
                     } else if (this.selectedType === 'vehicle') {
@@ -413,34 +459,45 @@
                             });
                         }
                     } else if (this.selectedType === 'weapon') {
-                        const weaponMatch = content.match(/\[(?:`|")([^`"]*)(?:`|")\]\s*=\s*{([^}]*)}/);
-                        if (weaponMatch) {
-                            const weaponValues = weaponMatch[2];
-                            const nameMatch = weaponValues.match(/name\s*=\s*'([^']*)'/);
-                            const labelMatch = weaponValues.match(/label\s*=\s*'([^']*)'/);
-                            const weapontypeMatch = weaponValues.match(/weapontype\s*=\s*'([^']*)'/);
-                            const ammotypeMatch = weaponValues.match(/ammotype\s*=\s*([^,]+)/);
-                            const damagereasonMatch = weaponValues.match(/damagereason\s*=\s*'([^']*)'/);
-                            this.weapon.name = nameMatch ? nameMatch[1] : '';
-                            this.weapon.label = labelMatch ? labelMatch[1] : '';
-                            this.weapon.weapontype = weapontypeMatch ? weapontypeMatch[1] : '';
-                            this.weapon.ammotype = ammotypeMatch ? ammotypeMatch[1].trim() : '';
-                            this.weapon.damagereason = damagereasonMatch ? damagereasonMatch[1] : '';
-                        }
-                    } else if (this.selectedType === 'gang') {
-                        const gangMatch = content.match(/(\w+)\s*=\s*{\s*label\s*=\s*'([^']*)',\s*grades\s*=\s*{([^}]*)}/);
-                        if (gangMatch) {
-                            this.gang.name = gangMatch[1];
-                            this.gang.label = gangMatch[2];
-                            const ranks = gangMatch[3].match(/(\d+)\s*=\s*{([^}]*)}/g);
-                            this.gang.ranks = ranks.map(rank => {
-                                const [_, rankId, rankValues] = rank.match(/(\d+)\s*=\s*{([^}]*)}/);
-                                const nameMatch = rankValues.match(/name\s*=\s*'([^']*)'/);
-                                const permissionMatch = rankValues.match(/permission\s*=\s*'([^']*)'/);
+                        const weaponMatches = content.match(/\[(?:`|")([^`"]*)(?:`|")\]\s*=\s*{([^}]*)}/g);
+                        if (weaponMatches) {
+                            this.weapons = weaponMatches.map(weaponMatch => {
+                                const weaponValues = weaponMatch.match(/([^`"]+)\]\s*=\s*{([^}]*)}/)[2];
+                                const nameMatch = weaponValues.match(/name\s*=\s*'([^']*)'/);
+                                const labelMatch = weaponValues.match(/label\s*=\s*'([^']*)'/);
+                                const weapontypeMatch = weaponValues.match(/weapontype\s*=\s*'([^']*)'/);
+                                const ammotypeMatch = weaponValues.match(/ammotype\s*=\s*([^,]+)/);
+                                const damagereasonMatch = weaponValues.match(/damagereason\s*=\s*'([^']*)'/);
                                 return {
                                     name: nameMatch ? nameMatch[1] : '',
-                                    permission: permissionMatch ? permissionMatch[1] : ''
+                                    label: labelMatch ? labelMatch[1] : '',
+                                    weapontype: weapontypeMatch ? weapontypeMatch[1] : '',
+                                    ammotype: ammotypeMatch ? ammotypeMatch[1].trim() : '',
+                                    damagereason: damagereasonMatch ? damagereasonMatch[1] : ''
                                 };
+                            });
+                        }
+                    } else if (this.selectedType === 'gang') {
+                        const gangMatches = content.match(/(\w+)\s*=\s*{\s*label\s*=\s*'([^']*)',\s*grades\s*=\s*{([^}]*)}/g);
+                        if (gangMatches) {
+                            gangMatches.forEach(gangMatch => {
+                                const [_, gangName, gangLabel, ranksStr] = gangMatch.match(/(\w+)\s*=\s*{\s*label\s*=\s*'([^']*)',\s*grades\s*=\s*{([^}]*)}/);
+                                const gang = {
+                                    name: gangName,
+                                    label: gangLabel,
+                                    ranks: []
+                                };
+                                const ranks = ranksStr.match(/(\d+)\s*=\s*{([^}]*)}/g);
+                                ranks.forEach(rank => {
+                                    const [__, rankId, rankValues] = rank.match(/(\d+)\s*=\s*{([^}]*)}/);
+                                    const nameMatch = rankValues.match(/name\s*=\s*'([^']*)'/);
+                                    const permissionMatch = rankValues.match(/permission\s*=\s*'([^']*)'/);
+                                    gang.ranks.push({
+                                        name: nameMatch ? nameMatch[1] : '',
+                                        permission: permissionMatch ? permissionMatch[1] : ''
+                                    });
+                                });
+                                this.gangs.push(gang);
                             });
                         }
                     }
