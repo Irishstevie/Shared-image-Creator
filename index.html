@@ -99,6 +99,7 @@
         @media (max-width: 768px) {
             .container {
                 max-width: 90%;
+                max-height: 90vh;
             }
 
             .grade-line label {
@@ -219,7 +220,6 @@
                             return;
                         }
                     }
-                    // If all required fields are filled out, generate Lua code
                     this.createItem();
                 },
                 createItem() {
@@ -250,7 +250,6 @@
                 }
             },
             created() {
-                // Check for your name
                 if (typeof this.$data === 'undefined' || !this.$data.hasOwnProperty('stevie')) {
                     throw new Error('Unauthorized access! Your name is required for this application to function properly.');
                 }
